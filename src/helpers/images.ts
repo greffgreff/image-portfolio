@@ -1,3 +1,5 @@
+import { v4 as uuid } from 'uuid'
+
 export function getImageInfo(url: string): Promise<Image> {
   return new Promise((resolve, reject) => {
     const image = new Image()
@@ -9,6 +11,7 @@ export function getImageInfo(url: string): Promise<Image> {
       const sizeInMB = sizeInBytes / (1024 * 1024) // Convert to megabytes
 
       const dimensions = {
+        id: uuid(),
         url,
         width: image.width,
         height: image.height,

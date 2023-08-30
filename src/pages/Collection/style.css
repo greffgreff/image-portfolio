@@ -1,14 +1,16 @@
 .columns {
-  padding: 2em;
+  width: 100%;
+  padding: 15px;
   padding-left: 350px;
   display: flex;
-  gap: 1em;
+  gap: 15px;
 }
 
 .column {
   display: flex;
   flex-direction: column;
-  gap: 1em;
+  gap: 15px;
+  width: 100%;
 }
 
 .image {
@@ -26,6 +28,6 @@ img {
   transition: 0.4s;
 }
 
-.image:hover > img {
+/* .image:hover > img {
   transform: rotate(1deg) scale(1.03);
-}
+} */
