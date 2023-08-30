@@ -1,0 +1,15 @@
+.media-component {
+  padding: 2em;
+  padding-left: 350px;
+  display: grid;
+  grid-template-rows: 1fr;
+  /* grid-template-columns: 1fr; */
+  height: 100%;
+}
+
+/* .media-component img {
+  overflow: hidden;
+  border-radius: 7px;
+  max-width: 100%;
+  max-height: 100%;
+} */

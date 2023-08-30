@@ -1,5 +1,5 @@
-import Controls from '../../components/Controls'
 import './style.css'
+import Controls from '../../components/Controls'
 import { Link } from 'react-router-dom'
 
 export default () => {

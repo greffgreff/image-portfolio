@@ -1,15 +1,9 @@
 import './style.css'
 import { useEffect, useState } from 'react'
 import { fetchRandomImages } from '../../api/images'
-import { getDimensions } from '../../helpers/images'
+import { getImageInfo, Image } from '../../helpers/images'
 import { Link, useParams } from 'react-router-dom'
 import Controls from '../../components/Controls'
-
-interface Image {
-  url: string
-  width: number
-  height: number
-}
 
 export default () => {
   const { id } = useParams()
@@ -19,12 +13,12 @@ export default () => {
   useEffect(() => {
     fetchRandomImages().then(async urls => {
       const imageObjects = await Promise.all(
-        urls.map(async (url: string) => {
-          const { width, height } = await getDimensions(url)
-          return { url, width, height }
+        urls.map(async (url: string, i: number) => {
+          const image = await getImageInfo(url)
+          return { id: i, ...image }
         })
       )
-      setImages([...images, ...imageObjects])
+      setImages(imageObjects)
     })
   }, [])
 
@@ -43,23 +37,28 @@ export default () => {
   return (
     <main>
       <Controls title='My Collection'>
+        <div>An album of random images of nature.</div>
+        <div>{images.length} images</div>
+        <span>
+          <div>{columnCount} columns</div>
+          <input
+            type='range'
+            min='1'
+            max='10'
+            value={columnCount}
+            onChange={e => setColumnCount(parseInt(e.target.value))}
+          />
+        </span>
         <Link to='/collections'>Back to collections</Link>
-        <input
-          type='range'
-          id='columnCount'
-          min='1'
-          max='10'
-          value={columnCount}
-          onChange={e => setColumnCount(parseInt(e.target.value))}
-        />
       </Controls>
+
       <div className='columns'>
         {columns.map((column, i) => (
           <div key={i} className='column'>
-            {column.map((image, j) => (
-              <Link to={buildUrl(`${j + 1}`)}>
+            {column.map(image => (
+              <Link to={buildUrl(image.id)}>
                 <div className='image'>
-                  <img key={j} src={image.url} alt={`Image ${j}`} />
+                  <img key={image.id} src={image.url} />
                 </div>
               </Link>
             ))}

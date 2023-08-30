@@ -6,4 +6,5 @@
   display: grid;
   gap: 1em;
   z-index: 1;
+  max-width: 300px;
 }
