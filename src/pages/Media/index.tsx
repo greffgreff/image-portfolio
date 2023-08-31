@@ -2,8 +2,8 @@ import './style.css'
 import { Link, useLocation, useParams } from 'react-router-dom'
 import { useEffect, useState } from 'react'
 import { fetchRandomImages } from '../../api/images'
-import Controls from '../../components/Controls'
 import { Image, getImageInfo } from '../../helpers/images'
+import Sidebar from '../../components/Sidebar'
 
 export default () => {
   const [image, setImage] = useState<Image>()
@@ -23,13 +23,13 @@ export default () => {
 
   return (
     <div className={'media-component'}>
-      <Controls title={id}>
+      <Sidebar title={id}>
         <div>
           {image?.width} x {image?.height}
         </div>
         <div>{Math.floor(image?.size! * 100) / 100} MB</div>
         {origin && <Link to={'/collections/' + origin}>Back to collection</Link>}
-      </Controls>
+      </Sidebar>
 
       <img src={image?.url} />
     </div>

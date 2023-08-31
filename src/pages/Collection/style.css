@@ -1,9 +1,22 @@
+main {
+  display: flex;
+  gap: 1em;
+  overflow: scroll;
+}
+
 .columns {
   width: 100%;
   padding: 15px;
-  padding-left: 350px;
   display: flex;
   gap: 15px;
+  height: fit-content;
+  overflow-y: scroll;
+}
+
+@media (max-width: 1000px) {
+  main {
+    flex-direction: column;
+  }
 }
 
 .column {
