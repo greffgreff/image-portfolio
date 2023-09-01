@@ -17,7 +17,7 @@ export default () => {
   }, [])
 
   return (
-    <main>
+    <div className='content-container'>
       <Sidebar title={id}>
         {image ? (
           <>
@@ -32,7 +32,10 @@ export default () => {
         {origin && <Link to={'/collections/' + origin}>Back to collection</Link>}
       </Sidebar>
 
-      <img src={image?.url} />
-    </main>
+      <div className='content-image-container'>
+        <img className='content-image' src={image?.url} />
+        <img className='content-image-background' src={image?.url} />
+      </div>
+    </div>
   )
 }

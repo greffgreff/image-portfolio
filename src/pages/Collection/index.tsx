@@ -62,9 +62,13 @@ export default () => {
       <div className='collection-columns' onScroll={handleScroll}>
         {columns.map(column => (
           <div key={uuid()} className='collection-column'>
-            {column.map(image => (
+            {column.map((image, i) => (
               <div key={image.id} className='collection-image-container' id={image.id}>
-                <Link to={`/content/My Image?origin=${id}&url=${image.url}`}>
+                <Link
+                  to={`/content/My Image?origin=${id}&url=${image.url}&prev=${
+                    column[i - 1]!?.url
+                  }&next=${column[i + 1]!?.url}`}
+                >
                   <img src={image.url} />
                 </Link>
               </div>
