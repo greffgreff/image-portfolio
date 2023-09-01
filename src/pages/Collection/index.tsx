@@ -3,8 +3,8 @@ import { useEffect, useRef, useState } from 'react'
 import { fetchRandomImages } from '../../api/images'
 import { getImageInfo, Image } from '../../helpers/images'
 import { Link, useParams } from 'react-router-dom'
-import { v4 as uuid } from 'uuid'
 import Sidebar from '../../components/Sidebar'
+import Columns from '../../components/Columns'
 
 export default () => {
   const { id } = useParams()
@@ -15,16 +15,6 @@ export default () => {
   useEffect(() => {
     loadImages()
   }, [])
-
-  const columns: Image[][] = Array.from({ length: columnCount }, () => [])
-
-  images.forEach(image => {
-    const columnHeights = columns.map(column =>
-      column.reduce((accumulator, img) => accumulator + img.height, 0)
-    )
-    const shortestColumnIndex = columnHeights.indexOf(Math.min(...columnHeights))
-    columns[shortestColumnIndex].push(image)
-  })
 
   async function loadImages() {
     fetchRandomImages(id!).then(async urls => {
@@ -59,25 +49,7 @@ export default () => {
         <Link to='/collections'>Back to collections</Link>
       </Sidebar>
 
-      <div className='collection-columns' onScroll={handleScroll}>
-        {columns.map((column, j) => (
-          <div key={j} className='collection-column'>
-            {column.map((image, i) => (
-              <div key={image.id} className='collection-image-container' id={image.id}>
-                <Link
-                  to={`/content/My Image?origin=${id}&url=${image.url}&prev=${
-                    column[i - 1]!?.url
-                  }&next=${column[i + 1]!?.url}`}
-                >
-                  <img src={image.url} />
-                </Link>
-              </div>
-            ))}
-          </div>
-        ))}
-
-        <div ref={bottom} style={{ display: 'none' }} />
-      </div>
+      <Columns count={columnCount} images={images} onScroll={handleScroll} />
     </div>
   )
 }

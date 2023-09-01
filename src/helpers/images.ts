@@ -1,5 +1,15 @@
 import { v4 as uuid } from 'uuid'
 
+export interface Image {
+  id: any
+  url: string
+  width: number
+  height: number
+  size: number
+  createdAt: Date
+  updatedAt?: Date
+}
+
 export function getImageInfo(url: string): Promise<Image> {
   return new Promise((resolve, reject) => {
     const image = new Image()
@@ -15,7 +25,8 @@ export function getImageInfo(url: string): Promise<Image> {
         url,
         width: image.width,
         height: image.height,
-        size: sizeInMB
+        size: sizeInMB,
+        createdAt: new Date()
       }
 
       resolve(dimensions)
@@ -27,12 +38,4 @@ export function getImageInfo(url: string): Promise<Image> {
 
     image.src = url
   })
-}
-
-export interface Image {
-  id?: any
-  url: string
-  width: number
-  height: number
-  size: number
 }

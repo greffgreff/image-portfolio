@@ -1,0 +1,39 @@
+.collection-columns {
+  width: 100%;
+  padding: 15px;
+  display: flex;
+  gap: 15px;
+  overflow-y: scroll;
+}
+
+.collection-column {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  width: 100%;
+  height: fit-content;
+}
+
+.collection-image-container {
+  border-radius: 7px;
+  cursor: pointer;
+  overflow: hidden;
+  width: 100%;
+  transition: 0.4s;
+}
+
+.collection-image-container img {
+  object-fit: contain;
+  width: 100%;
+  height: 100%;
+  /* filter: grayscale(0); */
+  /* transition: all 0.2s ease-out; */
+}
+
+/* .collection-image-container:hover img {
+    transform: scale(1.05);
+  } */
+
+/* .collection-image-container img:not(:hover) {
+    filter: grayscale(0.7) brightness(0.7);
+  } */
