@@ -60,8 +60,8 @@ export default () => {
       </Sidebar>
 
       <div className='collection-columns' onScroll={handleScroll}>
-        {columns.map(column => (
-          <div key={uuid()} className='collection-column'>
+        {columns.map((column, j) => (
+          <div key={j} className='collection-column'>
             {column.map((image, i) => (
               <div key={image.id} className='collection-image-container' id={image.id}>
                 <Link

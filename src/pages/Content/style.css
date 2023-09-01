@@ -24,6 +24,7 @@
   width: 100%;
   top: 0;
   left: 0;
+  overflow: hidden;
 }
 
 .content-image-container .content-image {
@@ -34,5 +35,5 @@
 .content-image-container .content-image-background {
   z-index: 0;
   object-fit: cover;
-  filter: blur(5px) brightness(50%);
+  filter: blur(10px) brightness(0.4);
 }
