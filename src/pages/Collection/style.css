@@ -1,32 +1,36 @@
-main {
+.collection-container {
   display: flex;
   gap: 1em;
-  overflow: scroll;
+  height: 100vh;
 }
 
-.columns {
+.collection-columns {
   width: 100%;
   padding: 15px;
   display: flex;
   gap: 15px;
-  height: fit-content;
   overflow-y: scroll;
 }
 
 @media (max-width: 1000px) {
-  main {
+  .collection-container {
     flex-direction: column;
+  }
+
+  .collection-container {
+    height: fit-content;
   }
 }
 
-.column {
+.collection-column {
   display: flex;
   flex-direction: column;
   gap: 15px;
   width: 100%;
+  height: fit-content;
 }
 
-.image {
+.collection-image-container {
   border-radius: 7px;
   cursor: pointer;
   overflow: hidden;
@@ -34,13 +38,14 @@ main {
   transition: 0.4s;
 }
 
-img {
+.collection-image-container img {
   object-fit: contain;
   width: 100%;
   height: 100%;
-  transition: 0.4s;
+  transition: 2s ease-out;
 }
 
-/* .image:hover > img {
-  transform: rotate(1deg) scale(1.03);
-} */
+.collection-image-container:hover > img {
+  transform: scale(1.05);
+  /* transform: rotate(1deg) scale(1.03); */
+}
