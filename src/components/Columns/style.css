@@ -25,14 +25,4 @@
 .collection-image-container img {
   object-fit: contain;
   width: 100%;
-  /* filter: grayscale(0); */
-  /* transition: all 0.2s ease-out; */
 }
-
-/* .collection-image-container:hover img {
-    transform: scale(1.05);
-  } */
-
-/* .collection-image-container img:not(:hover) {
-    filter: grayscale(0.7) brightness(0.7);
-  } */
