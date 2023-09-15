@@ -1,103 +1,64 @@
-import { useEffect, useState } from 'react'
 import './style.css'
-
-interface Coordinates {
-  x: number
-  y: number
-}
-
-interface Shape {
-  p1: Coordinates
-  p2: Coordinates
-  p3: Coordinates
-  p4: Coordinates
-}
+import { useEffect } from 'react'
 
 export default () => {
   useEffect(() => {
     const container = window.document.getElementById('exhibit-container') as HTMLDivElement
-    const boundry = container.getBoundingClientRect()
-    const landscape = Math.random() > 0.5
+    const boundary = container.getBoundingClientRect()
 
-    const margin = 0.2
-    const lowerHeight = boundry.height * margin
-    const upperHeight = boundry.height * (1 - margin)
-    const lowerWidth = boundry.width * margin
-    const upperWidth = boundry.width * (1 - margin)
+    const between = (min: number, max: number) => min + Math.random() * (max - min)
 
-    const getRandomHeight = () => getBetween(lowerHeight, upperHeight)
-    const getRandomWidth = () => getBetween(lowerWidth, upperWidth)
-
-    const separation = 20
-
-    const joint1 = {
-      x: landscape ? 0 : getRandomHeight(),
-      y: landscape ? getRandomWidth() : 0
+    const newFx = () => {
+      const a = (Math.random() < 0.5 ? -1 : 1) * Math.random()
+      const lowerY = boundary.height * 0.1
+      const upperY = boundary.height * 0.9
+      const b = between(lowerY, upperY)
+      const fx = (x: number) => {
+        let y = a * x + b
+        if (y < 0) {
+          y = 0
+          x = -b / a
+        }
+        if (y > boundary.height) {
+          y = boundary.height
+          x = (boundary.height - b) / a
+        }
+        return { x, y }
+      }
+      return { slope: a, intercept: b, fx }
     }
 
-    const joint2 = {
-      x: landscape ? boundry.width : getRandomWidth(),
-      y: landscape ? getRandomHeight() : boundry.height
+    console.log(boundary.width, boundary.height)
+
+    const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg')
+    svg.setAttribute('width', boundary.width.toString())
+    svg.setAttribute('height', boundary.height.toString())
+
+    for (let i = 0; i < 10; i++) {
+      const { fx } = newFx()
+      const pos1 = fx(0)
+      const pos2 = fx(boundary.width)
+
+      const line = document.createElementNS('http://www.w3.org/2000/svg', 'line')
+      line.setAttribute('x1', pos1.x.toString())
+      line.setAttribute('y1', pos1.y.toString())
+      line.setAttribute('x2', pos2.x.toString())
+      line.setAttribute('y2', pos2.y.toString())
+      line.setAttribute('stroke', randomRgb())
+      line.setAttribute('stroke-width', '2')
+
+      svg.appendChild(line)
     }
 
-    const shape1: Shape = {
-      p1: { x: 0, y: 0 },
-      p2: {
-        x: joint1.x - (landscape ? 0 : separation / 2),
-        y: joint1.y - (landscape ? separation / 2 : 0)
-      },
-      p3: {
-        x: joint2.x - (landscape ? 0 : separation / 2),
-        y: joint2.y - (landscape ? separation / 2 : 0)
-      },
-      p4: { x: landscape ? boundry.width : 0, y: landscape ? 0 : boundry.height }
-    }
-
-    const shape2: Shape = {
-      p1: { x: boundry.width, y: boundry.height },
-      p2: {
-        x: joint2.x + (landscape ? 0 : separation / 2),
-        y: joint2.y + (landscape ? separation / 2 : 0)
-      },
-      p3: {
-        x: joint1.x + (landscape ? 0 : separation / 2),
-        y: joint1.y + (landscape ? separation / 2 : 0)
-      },
-      p4: { x: landscape ? 0 : boundry.width, y: landscape ? boundry.height : 0 }
-    }
-
-    const parsedShape1: Shape = {
-      p1: { x: (shape1.p1.x / boundry.width) * 100, y: (shape1.p1.y / boundry.height) * 100 },
-      p2: { x: (shape1.p2.x / boundry.width) * 100, y: (shape1.p2.y / boundry.height) * 100 },
-      p3: { x: (shape1.p3.x / boundry.width) * 100, y: (shape1.p3.y / boundry.height) * 100 },
-      p4: { x: (shape1.p4.x / boundry.width) * 100, y: (shape1.p4.y / boundry.height) * 100 }
-    }
-
-    const parsedShape2: Shape = {
-      p1: { x: (shape2.p1.x / boundry.width) * 100, y: (shape2.p1.y / boundry.height) * 100 },
-      p2: { x: (shape2.p2.x / boundry.width) * 100, y: (shape2.p2.y / boundry.height) * 100 },
-      p3: { x: (shape2.p3.x / boundry.width) * 100, y: (shape2.p3.y / boundry.height) * 100 },
-      p4: { x: (shape2.p4.x / boundry.width) * 100, y: (shape2.p4.y / boundry.height) * 100 }
-    }
-
-    drawShape(parsedShape1)
-    drawShape(parsedShape2)
+    container.appendChild(svg)
   }, [])
 
   return <div id='exhibit-container' className='exhibit-container'></div>
 }
 
-function getBetween(min: number, max: number) {
-  const randomDecimal = Math.random()
-  const randomNumber = min + randomDecimal * (max - min)
-  return Math.floor(randomNumber)
-}
-
-function drawShape(shape: Shape) {
-  const div = document.createElement('div')
-  div.className = 'exhibit-box'
-  const coordinates: string[] = Object.values(shape).map(p => `${p.x}% ${p.y}%`)
-  div.style.clipPath = `polygon(${coordinates.join(',')})`
-  const container = document.getElementById('exhibit-container') as HTMLDivElement
-  container.appendChild(div)
+function randomRgb() {
+  const red = Math.floor(Math.random() * 256)
+  const green = Math.floor(Math.random() * 256)
+  const blue = Math.floor(Math.random() * 256)
+  return `rgb(${red}, ${green}, ${blue})`
 }
