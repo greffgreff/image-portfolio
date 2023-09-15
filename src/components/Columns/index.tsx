@@ -11,7 +11,7 @@ interface ColumnProps {
 
 export default ({ images, count = 3, onScroll }: ColumnProps) => {
   const bottom = useRef<HTMLDivElement | null>(null)
-  
+
   const columns: Image[][] = Array.from({ length: count }, () => [])
 
   images.forEach(image => {
@@ -27,7 +27,13 @@ export default ({ images, count = 3, onScroll }: ColumnProps) => {
       {columns.map((column, j) => (
         <div key={j} className='collection-column'>
           {column.map((image, i) => (
-            <div key={image.id} className='collection-image-container' id={image.id}>
+            <div
+              key={image.id}
+              className={
+                'collection-image-container' + (Math.random() < 0 ? ' video' : '')
+              }
+              id={image.id}
+            >
               <Link to={'/content/My Image?url=' + image.url}>
                 <img src={image.url} />
               </Link>

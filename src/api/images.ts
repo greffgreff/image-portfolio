@@ -4,15 +4,18 @@ export async function fetchRandomImages(
   query?: string,
   count: number = 30
 ): Promise<string[]> {
-  const response = await axios.get(
-    'https://api.unsplash.com/photos/random?count=' +
-      count +
-      '&client_id=zSZyTPiC43Fj4mDmzmxw_xfeJ7PhQy9sAaXm0oMvVB4&query=' +
-      query
-  )
-  const images = response.data
-  return images.map((i: any) => i.urls.small)
-  // return hard.map((i: any) => i.urls.regular)
+  // const url =
+  //   'https://api.unsplash.com/photos/random?' +
+  //   `&count${count}` +
+  //   '&client_id=zSZyTPiC43Fj4mDmzmxw_xfeJ7PhQy9sAaXm0oMvVB4' +
+  //   (query ? '&query=' + query : '')
+  // const response = await axios.get(url)
+
+  // console.log(url)
+  // const images = response.data
+  // console.log(images)
+  // return images.map((i: any) => i.urls.small)
+  return hard.map((i: any) => i.urls.regular)
 }
 
 const hard = [

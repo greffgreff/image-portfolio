@@ -5,6 +5,7 @@ import Home from './pages/Home'
 import Collection from './pages/Collection'
 import Collections from './pages/Collections'
 import Media from './pages/Content'
+import Exhibit from './pages/Exhibit'
 
 const root = createRoot(document.getElementById('root')!)
 
@@ -15,6 +16,7 @@ root.render(
       <Route path='/collections' element={<Collections />} />
       <Route path='/collections/:id' element={<Collection />} />
       <Route path='/content/:id' element={<Media />} />
+      <Route path='/exhibit' element={<Exhibit />} />
     </Routes>
   </BrowserRouter>
 )

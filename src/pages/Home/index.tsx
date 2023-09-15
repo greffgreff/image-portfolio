@@ -7,6 +7,7 @@ export default () => {
     <div className='home-container'>
       <Sidebar title='Home'>
         <Link to='/collections'>Collections</Link>
+        <Link to='/exhibit'>Exhibit</Link>
       </Sidebar>
     </div>
   )
