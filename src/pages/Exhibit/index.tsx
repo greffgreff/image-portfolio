@@ -7,9 +7,10 @@ interface Point {
 }
 
 interface Line {
-  lineaFrunction: LinearFunction
   pos1: Point
   pos2: Point
+  slope: number
+  intercept: number
 }
 
 interface LinearFunction {
@@ -24,8 +25,7 @@ export default () => {
     const boundary = container.getBoundingClientRect()
 
     const createFunction = (): LinearFunction => {
-      const slope = (Math.random() < 0.5 ? -1 : 1) * Math.random()
-
+      const slope = getBetween(-1, 1)
       const lowerY = boundary.height * 0.2
       const upperY = boundary.height * 0.8
       const intercept = getBetween(lowerY, upperY)
@@ -40,9 +40,9 @@ export default () => {
           y = boundary.height
           x = (boundary.height - intercept) / slope
         }
-        return { x, y }
+        return { x: Math.ceil(x), y: Math.ceil(y) }
       }
-      
+
       return { slope, intercept, fx }
     }
 
@@ -54,25 +54,17 @@ export default () => {
 
     let iteration = 0
     while (lines.length < 4) {
-      if (iteration >= 12) {
-        break
-      }
+      if (iteration >= 12) break
       iteration += 1
 
-      const linearFunction = createFunction()
-      const pos1 = linearFunction.fx(0)
-      const pos2 = linearFunction.fx(boundary.width)
-
-      const hasSimilarSlope = lines.some(line =>
-        isWithin(line.lineaFrunction.intercept, linearFunction.intercept, 0.2)
-      )
-      const hasSimilarIntercept = lines.some(line =>
-        isWithin(line.lineaFrunction.slope, linearFunction.slope, 0.1)
-      )
+      const { fx, slope, intercept } = createFunction()
+      const hasSimilarSlope = lines.some(line => isWithin(line.intercept, intercept, 0.2))
+      const hasSimilarIntercept = lines.some(line => isWithin(line.slope, slope, 0.2))
 
       if (!hasSimilarSlope && !hasSimilarIntercept) {
-        console.log('pushing new line')
-        lines.push({ pos1, pos2, lineaFrunction: linearFunction })
+        const pos1 = fx(0)
+        const pos2 = fx(boundary.width)
+        lines.push({ pos1, pos2, slope, intercept })
 
         const line = document.createElementNS('http://www.w3.org/2000/svg', 'line')
         line.setAttribute('x1', pos1.x.toString())
@@ -84,6 +76,34 @@ export default () => {
         svg.appendChild(line)
       }
     }
+
+    const points: Point[] = []
+
+    for (const line of lines) {
+      points.push(line.pos1)
+      points.push(line.pos2)
+
+      for (const other of lines) {
+        if (other !== line) {
+          const midpointX = (other.intercept - line.intercept) / (line.slope - other.slope)
+          const midpointY = other.slope * midpointX + other.intercept
+          const midpoint = { x: Math.ceil(midpointX), y: Math.ceil(midpointY) }
+
+          if (
+            !points.some(p => p.x === midpoint.x && p.y === midpoint.y) &&
+            midpointX > 0 &&
+            midpointX < boundary.width &&
+            midpointY > 0 &&
+            midpointY < boundary.height
+          ) {
+            points.push(midpoint)
+          }
+        }
+      }
+    }
+
+    console.log(points)
+
     container.appendChild(svg)
   }, [])
 
