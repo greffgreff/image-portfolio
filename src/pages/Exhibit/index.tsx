@@ -6,13 +6,6 @@ interface Point {
   y: number
 }
 
-interface Line {
-  pos1: Point
-  pos2: Point
-  slope: number
-  intercept: number
-}
-
 interface LinearFunction {
   slope: number
   intercept: number
@@ -46,55 +39,55 @@ export default () => {
       return { slope, intercept, fx }
     }
 
-    const lines: Line[] = []
-
-    const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg')
-    svg.setAttribute('width', boundary.width.toString())
-    svg.setAttribute('height', boundary.height.toString())
+    const lines: LinearFunction[] = []
 
     let iteration = 0
     while (lines.length < 4) {
       if (iteration >= 12) break
       iteration += 1
 
-      const { fx, slope, intercept } = createFunction()
-      const hasSimilarSlope = lines.some(line => isWithin(line.intercept, intercept, 0.2))
-      const hasSimilarIntercept = lines.some(line => isWithin(line.slope, slope, 0.2))
+      const linearFunction = createFunction()
+      const hasSimilarSlope = lines.some(line => isWithin(line.intercept, linearFunction.intercept, 0.2))
+      const hasSimilarIntercept = lines.some(line => isWithin(line.slope, linearFunction.slope, 0.2))
 
       if (!hasSimilarSlope && !hasSimilarIntercept) {
-        const pos1 = fx(0)
-        const pos2 = fx(boundary.width)
-        lines.push({ pos1, pos2, slope, intercept })
-
-        const line = document.createElementNS('http://www.w3.org/2000/svg', 'line')
-        line.setAttribute('x1', pos1.x.toString())
-        line.setAttribute('y1', pos1.y.toString())
-        line.setAttribute('x2', pos2.x.toString())
-        line.setAttribute('y2', pos2.y.toString())
-        line.setAttribute('stroke', randomRgb())
-        line.setAttribute('stroke-width', '2')
-        svg.appendChild(line)
+        lines.push(linearFunction)
       }
     }
 
     const points: Point[] = []
 
+    const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg')
+    svg.setAttribute('width', boundary.width.toString())
+    svg.setAttribute('height', boundary.height.toString())
+
     for (const line of lines) {
-      points.push(line.pos1)
-      points.push(line.pos2)
+      const pos1 = line.fx(0)
+      const pos2 = line.fx(boundary.width)
+
+      const svgLine = document.createElementNS('http://www.w3.org/2000/svg', 'line')
+      svgLine.setAttribute('x1', pos1.x.toString())
+      svgLine.setAttribute('y1', pos1.y.toString())
+      svgLine.setAttribute('x2', pos2.x.toString())
+      svgLine.setAttribute('y2', pos2.y.toString())
+      svgLine.setAttribute('stroke', randomRgb())
+      svgLine.setAttribute('stroke-width', '2')
+      svg.appendChild(svgLine)
+
+      points.push(pos1)
+      points.push(pos2)
 
       for (const other of lines) {
         if (other !== line) {
           const midpointX = (other.intercept - line.intercept) / (line.slope - other.slope)
-          const midpointY = other.slope * midpointX + other.intercept
-          const midpoint = { x: Math.ceil(midpointX), y: Math.ceil(midpointY) }
+          const midpoint = line.fx(midpointX)
 
           if (
             !points.some(p => p.x === midpoint.x && p.y === midpoint.y) &&
-            midpointX > 0 &&
-            midpointX < boundary.width &&
-            midpointY > 0 &&
-            midpointY < boundary.height
+            midpoint.x > 0 &&
+            midpoint.x < boundary.width &&
+            midpoint.y > 0 &&
+            midpoint.y < boundary.height
           ) {
             points.push(midpoint)
           }
